@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html style="margin:0 0 0 0;height:100%;">
+  <head>
+    <meta charset="utf-8">
+    <title>First Map Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Scripts/LeafletJS/leaflet.css">
+    <link rel="stylesheet" href="html.css">
+    <script src="Scripts/LeafletJS/leaflet.js" type="text/javascript"></script>
+  </head>
+  <body style="margin:0 0 0 0;height:80%;">
+
+    <div id="map" style="margin:0 0 0 0;width:100%; height:100%; background:#888888;"></div>
+
+    <div id="control-panel" style="position:fixed;bottom:0;height:20%;background-color:#444;width:100%;">
+
+      <div id="button-container">
+        <button class="compass-button" id="n-compass-button">N</button>
+        <button class="compass-button" id="ne-compass-button">NE</button>
+        <button class="compass-button" id="e-compass-button">E</button>
+        <button class="compass-button" id="se-compass-button">SE</button>
+        <button class="compass-button" id="s-compass-button">S</button>
+        <button class="compass-button" id="sw-compass-button">SW</button>
+        <button class="compass-button" id="w-compass-button">W</button>
+        <button class="compass-button" id="nw-compass-button">NW</button>
+      </div>
+
+    </div>
+
+    <script type="text/javascript">
+
+    //Variables
+    let mapSW = [0,4096];
+    let mapNE = [4096,0];
+
+    //Declare map object
+
+    let map = L.map('map').setView([0,0],1);
+
+    //Reference the tiles
+    L.tileLayer('FirstMapGame/{z}/{x}/{y}.png', {
+      minZoom: 1,
+      maxZoom: 4,
+      noWrap: true,
+      crs: L.CRS.Simple
+    }).addTo(map);
+
+    map.setMaxBounds(new L.LatLngBounds(
+      map.unproject(mapSW,map.getMaxZoom()),
+      map.unproject(mapNE,map.getMaxZoom())
+    ));
+
+    //Place markers and allow for movement
+
+    let movedMarker;
+    let compass = [
+      ["n",0,-100],
+      ["ne",75,-75],
+      ["e",100,0],
+      ["se",75,75],
+      ["s",0,100],
+      ["sw",-75,75],
+      ["w",-100,0],
+      ["nw",-75,-75]
+    ]
+
+
+    let marker = L.marker(map.unproject([2700,1700],map.getMaxZoom())).addTo(map);
+    let alien1 = L.marker(map.unproject([3000,2000],map.getMaxZoom())).addTo(map);
+
+    let moveMarker = function(markerVar,mapVar,xDiff,yDiff) {
+      let latlngObj;
+      latlngObj = mapVar.project(markerVar.getLatLng(),mapVar.getMaxZoom());
+      latlngObj.x = (parseInt(latlngObj.x) + xDiff);
+      latlngObj.y = (parseInt(latlngObj.y) + yDiff);
+      markerVar.setLatLng(mapVar.unproject(latlngObj,mapVar.getMaxZoom()));
+    };
+
+    let alienMove = function(markerVar,alienVar,mapVar) {
+      let markerCoords = map.project(markerVar.getLatLng(),mapVar.getMaxZoom());
+      let alienCoords = map.project(alienVar.getLatLng(),mapVar.getMaxZoom());
+      let closestPoint = {x:0,y:0};
+      let closestDirection;
+      let tempAlienCoords = {x:0,y:0};
+      compass.forEach(function(el) {
+        if(!closestDirection) {
+          closestDirection = el[0];
+          closestPoint.x = alienCoords.x;
+          closestPoint.y = alienCoords.y;
+          closestPoint.x = closestPoint.x + el[1];
+          closestPoint.y = closestPoint.y + el[2];
+        } else {
+          tempAlienCoords.x = alienCoords.x;
+          tempAlienCoords.y = alienCoords.y;
+          tempAlienCoords.x = tempAlienCoords.x + el[1];
+          tempAlienCoords.y = tempAlienCoords.y + el[2];
+          if(parseInt(markerCoords.distanceTo(tempAlienCoords)) <= parseInt(markerCoords.distanceTo(closestPoint))) {
+            closestDirection = el[0];
+            closestPoint.x = closestPoint.x + el[1];
+            closestPoint.y = closestPoint.y + el[2];
+          }
+        }
+      });
+    };
+
+    let nButton = document.getElementById('n-compass-button');
+    nButton.onclick = function() {
+      moveMarker(marker,map,0,-100);
+      alienMove(marker,alien1,map);
+    };
+
+    let neButton = document.getElementById('ne-compass-button');
+    neButton.onclick = function() {
+      moveMarker(marker,map,75,-75);
+      alienMove(marker,alien1,map);
+    };
+
+    let eButton = document.getElementById('e-compass-button');
+    eButton.onclick = function() {
+      moveMarker(marker,map,100,0);
+      alienMove(marker,alien1,map);
+    };
+
+    let seButton = document.getElementById('se-compass-button');
+    seButton.onclick = function() {
+      moveMarker(marker,map,75,75);
+      alienMove(marker,alien1,map);
+    };
+
+    let sButton = document.getElementById('s-compass-button');
+    sButton.onclick = function() {
+      moveMarker(marker,map,0,100);
+      alienMove(marker,alien1,map);
+    };
+
+    let swButton = document.getElementById('sw-compass-button');
+    swButton.onclick = function() {
+      moveMarker(marker,map,-75,75);
+      alienMove(marker,alien1,map);
+    };
+
+    let wButton = document.getElementById('w-compass-button');
+    wButton.onclick = function() {
+      moveMarker(marker,map,-100,0);
+      alienMove(marker,alien1,map);
+    };
+
+    let nwButton = document.getElementById('nw-compass-button');
+    nwButton.onclick = function() {
+      moveMarker(marker,map,-75,-75);
+      alienMove(marker,alien1,map);
+    };
+
+    </script>
+
+  </body>
+</html>

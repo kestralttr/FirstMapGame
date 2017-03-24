@@ -1,0 +1,51 @@
+#button-container {
+  position: relative;
+  border: 1px solid green;
+  height: 100px;
+  width:150px;
+  margin: 20px 0 0 20px;
+}
+
+.compass-button {
+  position: absolute;
+}
+
+#n-compass-button {
+  top:0;
+  left:60px;
+}
+
+#ne-compass-button {
+  top:20px;
+  left:80px;
+}
+
+#e-compass-button {
+  top:40px;
+  left:100px;
+}
+
+#se-compass-button {
+  top:60px;
+  left:80px;
+}
+
+#s-compass-button {
+  top:80px;
+  left:60px;
+}
+
+#sw-compass-button {
+  top:60px;
+  left:30px;
+}
+
+#w-compass-button {
+  top:40px;
+  left:20px;
+}
+
+#nw-compass-button {
+  top:20px;
+  left:30px;
+}
