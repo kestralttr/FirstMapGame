@@ -101,6 +101,7 @@
           }
         }
       });
+      alienVar.setLatLng(mapVar.unproject(closestPoint,mapVar.getMaxZoom()));
     };
 
     let nButton = document.getElementById('n-compass-button');
