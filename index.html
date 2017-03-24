@@ -52,6 +52,20 @@
 
     //Place markers and allow for movement
 
+    let markerIcon = L.icon({
+      iconUrl: 'Images/tank1W.png',
+      iconSize: [30,30],
+      iconAnchor: [15,15],
+      popupAnchor:[1,-15]
+    });
+
+    let alien1Icon = L.icon({
+      iconUrl: 'Images/alien1N.png',
+      iconSize: [30,30],
+      iconAnchor: [15,15],
+      popupAnchor:[1,-15]
+    });
+
     let movedMarker;
     let compass = [
       ["n",0,-100],
@@ -65,8 +79,8 @@
     ]
 
 
-    let marker = L.marker(map.unproject([2700,1700],map.getMaxZoom())).addTo(map);
-    let alien1 = L.marker(map.unproject([3000,2000],map.getMaxZoom())).addTo(map);
+    let marker = L.marker(map.unproject([2700,1700],map.getMaxZoom()),{icon:markerIcon}).addTo(map);
+    let alien1 = L.marker(map.unproject([3500,2500],map.getMaxZoom()),{icon:alien1Icon}).addTo(map);
 
     let moveMarker = function(markerVar,mapVar,xDiff,yDiff) {
       let latlngObj;
@@ -102,6 +116,12 @@
         }
       });
       alienVar.setLatLng(mapVar.unproject(closestPoint,mapVar.getMaxZoom()));
+      console.log(parseInt(markerCoords.distanceTo(closestPoint)));
+      if(parseInt(markerCoords.distanceTo(closestPoint)) > 1000) {
+        alienVar.setOpacity(0);
+      } else {
+        alienVar.setOpacity(1);
+      }
     };
 
     let nButton = document.getElementById('n-compass-button');
