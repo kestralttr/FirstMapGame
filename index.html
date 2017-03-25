@@ -80,7 +80,10 @@
 
 
     let marker = L.marker(map.unproject([2700,1700],map.getMaxZoom()),{icon:markerIcon}).addTo(map);
+    let markerStats = {health: 100, dmg: 50};
+
     let alien1 = L.marker(map.unproject([3500,2500],map.getMaxZoom()),{icon:alien1Icon}).addTo(map);
+    let alien1Stats = {health: 50, dmg: 40};
 
     let moveMarker = function(markerVar,mapVar,xDiff,yDiff) {
       let latlngObj;
@@ -88,6 +91,19 @@
       latlngObj.x = (parseInt(latlngObj.x) + xDiff);
       latlngObj.y = (parseInt(latlngObj.y) + yDiff);
       markerVar.setLatLng(mapVar.unproject(latlngObj,mapVar.getMaxZoom()));
+    };
+
+    let alienAttack = function(markerVar,markerCoords,markerStats,alienVar,alienCoords,alienStats) {
+      if(parseInt(markerCoords.distanceTo(alienCoords)) < 500) {
+        markerStats.health = markerStats.health - alienStats.dmg;
+        markerStats.dmg = markerStats.dmg - Math.floor(Math.random()*10);
+      }
+      console.log("markerHealth: ",markerStats.health);
+      console.log("markerDMG: ",markerStats.dmg);
+    };
+
+    let markerAttack = function(markerVar,markerCoords,markerStats,alienVar,alienCoords,alienStats) {
+
     };
 
     let alienMove = function(markerVar,alienVar,mapVar) {
@@ -122,6 +138,7 @@
       } else {
         alienVar.setOpacity(1);
       }
+      alienAttack(markerVar,markerCoords,markerStats,alienVar,map.project(alienVar.getLatLng(),mapVar.getMaxZoom()),alien1Stats);
     };
 
     let nButton = document.getElementById('n-compass-button');
