@@ -106,7 +106,7 @@
     };
 
     let alienAttack = function(markerVar,markerCoords,markerStats,alienVar,alienCoords,alienStats) {
-      if(parseInt(markerCoords.distanceTo(alienCoords)) < 500) {
+      if(parseInt(markerCoords.distanceTo(alienCoords)) < 500 && alienStats.health > 0) {
         markerStats.health = markerStats.health - alienStats.dmg;
         markerStats.dmg = markerStats.dmg - Math.floor(Math.random()*10);
       }
@@ -121,6 +121,7 @@
       if(parseInt(markerCoords.distanceTo(alienCoords)) < 500) {
         alienStats.health = alienStats.health - markerStats.dmg;
       }
+      console.log(alienStats.health);
     };
 
     let checkGameCondition = function(markerStats,alienStats) {
@@ -178,7 +179,7 @@
 
     let attackButton = document.getElementById('attack-button');
     attackButton.onclick = function() {
-
+      markerAttack(map.project(marker.getLatLng(),map.getMaxZoom()),markerStats,map.project(alien1.getLatLng(),map.getMaxZoom()),alien1Stats);
     }
 
     let nButton = document.getElementById('n-compass-button');
