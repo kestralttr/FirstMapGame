@@ -49,3 +49,27 @@
   top:20px;
   left:30px;
 }
+
+#health-readout {
+  position: absolute;
+  bottom: 100px;
+  left: 40%;
+}
+
+#damage-readout {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+}
+
+#game-condition {
+  position: absolute;
+  bottom: 100px;
+  left: 60%;
+}
+
+#attack-button {
+  position: absolute;
+  bottom: 50px;
+  left: 40%;
+}

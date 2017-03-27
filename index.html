@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="Scripts/LeafletJS/leaflet.css">
     <link rel="stylesheet" href="html.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="Scripts/LeafletJS/leaflet.js" type="text/javascript"></script>
   </head>
   <body style="margin:0 0 0 0;height:80%;">
@@ -23,6 +24,17 @@
         <button class="compass-button" id="sw-compass-button">SW</button>
         <button class="compass-button" id="w-compass-button">W</button>
         <button class="compass-button" id="nw-compass-button">NW</button>
+      </div>
+
+      <button id="attack-button">Attack!</button>
+
+      <div id="health-readout">
+      </div>
+
+      <div id="damage-readout">
+      </div>
+
+      <div id="game-condition">
       </div>
 
     </div>
@@ -83,7 +95,7 @@
     let markerStats = {health: 100, dmg: 50};
 
     let alien1 = L.marker(map.unproject([3500,2500],map.getMaxZoom()),{icon:alien1Icon}).addTo(map);
-    let alien1Stats = {health: 50, dmg: 40};
+    let alien1Stats = {health: 50, dmg: 20};
 
     let moveMarker = function(markerVar,mapVar,xDiff,yDiff) {
       let latlngObj;
@@ -98,17 +110,39 @@
         markerStats.health = markerStats.health - alienStats.dmg;
         markerStats.dmg = markerStats.dmg - Math.floor(Math.random()*10);
       }
-      console.log("markerHealth: ",markerStats.health);
-      console.log("markerDMG: ",markerStats.dmg);
     };
 
-    let markerAttack = function(markerVar,markerCoords,markerStats,alienVar,alienCoords,alienStats) {
-
+    let readoutUpdate = function(markerVar,markerStats) {
+      $("#health-readout").html(markerStats.health);
+      $("#damage-readout").html(markerStats.dmg);
     };
+
+    let markerAttack = function(markerCoords,markerStats,alienCoords,alienStats) {
+      if(parseInt(markerCoords.distanceTo(alienCoords)) < 500) {
+        alienStats.health = alienStats.health - markerStats.dmg;
+      }
+    };
+
+    let checkGameCondition = function(markerStats,alienStats) {
+      if(parseInt(markerStats.health) < 1) {
+        $("#game-condition").html("You lose!");
+        return;
+      }
+      if(parseInt(alienStats.health) < 1) {
+        console.log("fired!");
+        $("#game-condition").html("You win!");
+        return;
+      }
+      if((parseInt(alienStats.health) > 1) && (parseInt(markerStats.health) > 1)){
+        console.log("hi");
+        $("#game-condition").html("In progress...");
+        return;
+      }
+    }
 
     let alienMove = function(markerVar,alienVar,mapVar) {
-      let markerCoords = map.project(markerVar.getLatLng(),mapVar.getMaxZoom());
-      let alienCoords = map.project(alienVar.getLatLng(),mapVar.getMaxZoom());
+      let markerCoords = mapVar.project(markerVar.getLatLng(),mapVar.getMaxZoom());
+      let alienCoords = mapVar.project(alienVar.getLatLng(),mapVar.getMaxZoom());
       let closestPoint = {x:0,y:0};
       let closestDirection;
       let tempAlienCoords = {x:0,y:0};
@@ -141,52 +175,74 @@
       alienAttack(markerVar,markerCoords,markerStats,alienVar,map.project(alienVar.getLatLng(),mapVar.getMaxZoom()),alien1Stats);
     };
 
+
+    let attackButton = document.getElementById('attack-button');
+    attackButton.onclick = function() {
+
+    }
+
     let nButton = document.getElementById('n-compass-button');
     nButton.onclick = function() {
       moveMarker(marker,map,0,-100);
       alienMove(marker,alien1,map);
+      readoutUpdate(marker,markerStats);
+      checkGameCondition(markerStats,alien1Stats);
     };
 
     let neButton = document.getElementById('ne-compass-button');
     neButton.onclick = function() {
       moveMarker(marker,map,75,-75);
       alienMove(marker,alien1,map);
+      readoutUpdate(marker,markerStats);
+      checkGameCondition(markerStats,alien1Stats);
     };
 
     let eButton = document.getElementById('e-compass-button');
     eButton.onclick = function() {
       moveMarker(marker,map,100,0);
       alienMove(marker,alien1,map);
+      readoutUpdate(marker,markerStats);
+      checkGameCondition(markerStats,alien1Stats);
     };
 
     let seButton = document.getElementById('se-compass-button');
     seButton.onclick = function() {
       moveMarker(marker,map,75,75);
       alienMove(marker,alien1,map);
+      readoutUpdate(marker,markerStats);
+      checkGameCondition(markerStats,alien1Stats);
     };
 
     let sButton = document.getElementById('s-compass-button');
     sButton.onclick = function() {
       moveMarker(marker,map,0,100);
       alienMove(marker,alien1,map);
+      readoutUpdate(marker,markerStats);
+      checkGameCondition(markerStats,alien1Stats);
     };
 
     let swButton = document.getElementById('sw-compass-button');
     swButton.onclick = function() {
       moveMarker(marker,map,-75,75);
       alienMove(marker,alien1,map);
+      readoutUpdate(marker,markerStats);
+      checkGameCondition(markerStats,alien1Stats);
     };
 
     let wButton = document.getElementById('w-compass-button');
     wButton.onclick = function() {
       moveMarker(marker,map,-100,0);
       alienMove(marker,alien1,map);
+      readoutUpdate(marker,markerStats);
+      checkGameCondition(markerStats,alien1Stats);
     };
 
     let nwButton = document.getElementById('nw-compass-button');
     nwButton.onclick = function() {
       moveMarker(marker,map,-75,-75);
       alienMove(marker,alien1,map);
+      readoutUpdate(marker,markerStats);
+      checkGameCondition(markerStats,alien1Stats);
     };
 
     </script>
