@@ -5,96 +5,135 @@
   right:0;
   bottom:150px;
   z-index:1;
-  background-color: #888888;
+  background: #000 url('Images/blueblackgrid.svg') no-repeat center;
+  background-size: cover;
 }
 
-#button-container {
-  position: relative;
-  border: 1px solid green;
-  height: 100px;
-  width:150px;
-  margin: 20px 0 0 20px;
+#compass-button-container {
+  position: absolute;
+  /*border: 1px solid green;*/
+  height: 130px;
+  width:160px;
+  bottom: 10px;
+  left:50%;
+  transform: translate(-75px,0);
 }
 
 #control-panel {
   position: fixed;
   bottom: 0;
   height: 150px;
-  background-color: #444;
+  background-color: #161616;
+  background-size: cover;
   width:100%;
   z-index: 5;
+  box-shadow: 0px -5px 5px rgb(20,100,178);
 }
 
 .compass-button {
   position: absolute;
+  outline: none;
+  border:0px;
+  border-radius: 5px;
+  font-family: 'Orbitron', sans-serif;
+  color: #00c900;
+  background-color: Transparent;
+  border-radius: 5px;
+  border: 1px solid #00c900;
+  font-size: 12px;
+  line-height: 12px;
+  padding-top: 0.5em;
+  padding-bottom: 0.3em;
+  outline:none;
+}
+
+.compass-button:hover {
+  cursor: pointer;
+  color: #00ef00;
+  border: 1px solid #00ef00;
+  box-shadow: 0px 0px 5px #00ef00;
 }
 
 #n-compass-button {
   top:0;
-  left:60px;
+  left:82px;
+  transform: translateX(-12px);
 }
 
 #ne-compass-button {
-  top:20px;
-  left:80px;
+  top:25px;
+  left:112px;
+  transform: translateX(-19px);
 }
 
 #e-compass-button {
-  top:40px;
-  left:100px;
+  top:50px;
+  left:139px;
+  transform: translateX(-12px);
 }
 
 #se-compass-button {
-  top:60px;
-  left:80px;
+  top:75px;
+  left:112px;
+  transform: translateX(-19px);
 }
 
 #s-compass-button {
-  top:80px;
-  left:60px;
+  top:100px;
+  left:82px;
+  transform: translateX(-12px);
 }
 
 #sw-compass-button {
-  top:60px;
-  left:30px;
+  top:75px;
+  left:52px;
+  transform: translateX(-19px);
 }
 
 #w-compass-button {
-  top:40px;
-  left:20px;
+  top:50px;
+  left:17px;
+  transform: translateX(-12px);
 }
 
 #nw-compass-button {
-  top:20px;
-  left:30px;
+  top:25px;
+  left:52px;
+  transform: translateX(-19px);
 }
 
 #health-readout {
   position: absolute;
   bottom: 100px;
-  left: 40%;
+  left: 10%;
+  border: 1px solid red;
+  color: white;
 }
 
 #damage-readout {
   position: absolute;
   bottom: 100px;
-  left: 50%;
+  left: 20%;
+  border: 1px solid green;
+  color: white;
 }
 
 #game-condition {
   position: absolute;
   bottom: 100px;
-  left: 60%;
+  left: 30%;
+  border: 1px solid blue;
+  color: white;
 }
 
 #attack-button {
   position: absolute;
   bottom: 50px;
-  left: 40%;
+  left: 70%;
 }
 
 #repair-button {
   position: absolute;
   bottom: 50px;
-  left: 60%;
+  left: 85%;
 }
