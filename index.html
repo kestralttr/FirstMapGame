@@ -14,29 +14,36 @@
 
     <div id="map"></div>
 
-    <div id="control-panel">
+    <div id="control-panel-container">
 
-      <div id="compass-button-container">
-        <button class="compass-button" id="n-compass-button">N</button>
-        <button class="compass-button" id="ne-compass-button">NE</button>
-        <button class="compass-button" id="e-compass-button">E</button>
-        <button class="compass-button" id="se-compass-button">SE</button>
-        <button class="compass-button" id="s-compass-button">S</button>
-        <button class="compass-button" id="sw-compass-button">SW</button>
-        <button class="compass-button" id="w-compass-button">W</button>
-        <button class="compass-button" id="nw-compass-button">NW</button>
-      </div>
+      <div id="control-panel">
 
-      <button id="attack-button">Attack</button>
-      <button id="repair-button">Repair</button>
+        <div id="compass-button-container">
+          <button class="compass-button" id="n-compass-button">N</button>
+          <button class="compass-button" id="ne-compass-button">NE</button>
+          <button class="compass-button" id="e-compass-button">E</button>
+          <button class="compass-button" id="se-compass-button">SE</button>
+          <button class="compass-button" id="s-compass-button">S</button>
+          <button class="compass-button" id="sw-compass-button">SW</button>
+          <button class="compass-button" id="w-compass-button">W</button>
+          <button class="compass-button" id="nw-compass-button">NW</button>
+        </div>
 
-      <div id="health-readout">
-      </div>
+        <button id="attack-button">Attack</button>
+        <button id="repair-button">Repair</button>
 
-      <div id="damage-readout">
-      </div>
+        <div id="health-readout-container">
+          <span id="health-word">Health: </span><span id="health-readout">100</span>
+        </div>
 
-      <div id="game-condition">
+        <div id="damage-readout-container">
+          <span id="damage-word">Damage: </span><span id="damage-readout">50</span>
+        </div>
+
+        <div id="status-readout-container">
+          <span>Under attack!</span>
+        </div>
+
       </div>
 
     </div>
@@ -155,7 +162,7 @@
 
     let checkGameCondition = function(markerStats,alienStatsArray,alienVarArray) {
       if(parseInt(markerStats.health) < 1) {
-        $("#game-condition").html("You lose!");
+        $("#status-readout").html("You lose!");
       }
 
       alienStatsArray.forEach(function(alienStats,idx) {
@@ -210,9 +217,14 @@
 
     let markerRepair = function(markerStats) {
       if(markerStats.health + 10 > 100) {
-        marketStats = 100;
+        markerStats = 100;
       } else {
         markerStats.health += 10;
+      }
+      if(markerStats.dmg + 3 > 50) {
+        markerStats = 50;
+      } else {
+        markerStats.dmg += 3;
       }
     };
 
