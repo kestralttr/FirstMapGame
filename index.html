@@ -41,7 +41,7 @@
         </div>
 
         <div id="status-readout-container">
-          <span>Under attack!</span>
+          <span id="status-readout">Systems normal</span>
         </div>
 
       </div>
@@ -111,6 +111,11 @@
     let alien3Stats = {health: 50, dmg: 20};
 
     let alienStatsArray = [alien1Stats,alien2Stats,alien3Stats];
+    let alienHasAttacked = false;
+
+    let gameOver = false;
+    let gameWon = false;
+    let gameLost = false;
 
     let moveMarker = function(markerVar,mapVar,xDiff,yDiff) {
       let latlngObj;
@@ -121,10 +126,11 @@
     };
 
     let alienAttack = function(markerVar,markerCoords,markerStats,alienVar,alienCoords,alienStats) {
-      console.log("distance to marker",markerCoords.distanceTo(alienCoords));
+      alienHasAttacked = false;
       if(parseInt(markerCoords.distanceTo(alienCoords)) < 500 && alienStats.health > 0) {
         markerStats.health = markerStats.health - alienStats.dmg;
         markerStats.dmg = markerStats.dmg - Math.floor(Math.random()*10);
+        alienHasAttacked = true;
       }
     };
 
@@ -161,15 +167,66 @@
     };
 
     let checkGameCondition = function(markerStats,alienStatsArray,alienVarArray) {
-      if(parseInt(markerStats.health) < 1) {
-        $("#status-readout").html("You lose!");
-      }
 
       alienStatsArray.forEach(function(alienStats,idx) {
         if(alienStats.health < 1) {
           alienVarArray[idx].setOpacity(0);
         }
       });
+
+      if(parseInt(markerStats.health) < 1) {
+        gameLost = true;
+        gameOver = true;
+      }
+
+      let alienStillAlive = false;
+      alienStatsArray.forEach(function(alienStats) {
+        if(alienStats.health > 0) {
+          alienStillAlive = true;
+        }
+      });
+      if(alienStillAlive === false) {
+        gameWon = true;
+        gameOver = true;
+      }
+
+      if(gameLost) {
+        $("#status-readout").html("Mission failure");
+        $("#n-compass-button").prop('disabled',true);
+        $("#ne-compass-button").prop('disabled',true);
+        $("#e-compass-button").prop('disabled',true);
+        $("#se-compass-button").prop('disabled',true);
+        $("#s-compass-button").prop('disabled',true);
+        $("#sw-compass-button").prop('disabled',true);
+        $("#w-compass-button").prop('disabled',true);
+        $("#nw-compass-button").prop('disabled',true);
+        $("#attack-button").prop('disabled',true);
+        $("#repair-button").prop('disabled',true);
+        return;
+      }
+      if(gameWon) {
+        $("#status-readout").html("Mission success!");
+        $("#n-compass-button").prop('disabled',true);
+        $("#ne-compass-button").prop('disabled',true);
+        $("#e-compass-button").prop('disabled',true);
+        $("#se-compass-button").prop('disabled',true);
+        $("#s-compass-button").prop('disabled',true);
+        $("#sw-compass-button").prop('disabled',true);
+        $("#w-compass-button").prop('disabled',true);
+        $("#nw-compass-button").prop('disabled',true);
+        $("#attack-button").prop('disabled',true);
+        $("#repair-button").prop('disabled',true);
+        return;
+      }
+      if(alienHasAttacked) {
+        $("#status-readout").html("Under attack!");
+        return;
+      }
+
+      $("#status-readout").html("Systems normal");
+
+
+
       // if(parseInt(alienStats.health) < 1) {
       //   console.log("fired!");
       // }
