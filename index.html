@@ -121,18 +121,41 @@
       $("#damage-readout").html(markerStats.dmg);
     };
 
-    let markerAttack = function(markerCoords,markerStats,alienCoords,alienStats) {
-      if(parseInt(markerCoords.distanceTo(alienCoords)) < 500) {
-        alienStats.health = alienStats.health - markerStats.dmg;
-      }
-      console.log(alienStats.health);
+    let initiateMarkerAttack = function() {
+
     };
 
-    let checkGameCondition = function(markerStats,alienStatsArray) {
+    let markerAttack = function(markerCoords,markerStats,alienCoordsArray,alienStatsArray) {
+      console.log(alienStatsArray);
+      let targetAlienStats;
+      let targetAlienDistance;
+      alienCoordsArray.forEach(function(alienCoords,idx) {
+        if(parseInt(markerCoords.distanceTo(alienCoords)) < 500 && alienStatsArray[idx].health > 0) {
+          if(!targetAlienStats) {
+            targetAlienStats = alienStatsArray[idx];
+            targetAlienDistance = parseInt(markerCoords.distanceTo(alienCoords));
+          }
+          if(targetAlienDistance > parseInt(markerCoords.distanceTo(alienCoords))) {
+            targetAlienStats = alienStatsArray[idx];
+            targetAlienDistance = parseInt(markerCoords.distanceTo(alienCoords));
+          }
+        }
+      });
+      targetAlienStats.health -= markerStats.dmg;
+      console.log(targetAlienStats.health);
+    };
+
+    let checkGameCondition = function(markerStats,alienStatsArray,alienVarArray) {
       if(parseInt(markerStats.health) < 1) {
         $("#game-condition").html("You lose!");
         return;
       }
+
+      alienStatsArray.forEach(function(alienStats,idx) {
+        if(alienStats.health < 1) {
+          alienVarArray[idx].setOpacity(0);
+        }
+      });
       // if(parseInt(alienStats.health) < 1) {
       //   console.log("fired!");
       // }
@@ -170,7 +193,7 @@
         });
         alienVar.setLatLng(mapVar.unproject(closestPoint,mapVar.getMaxZoom()));
         console.log(parseInt(markerCoords.distanceTo(closestPoint)));
-        if(parseInt(markerCoords.distanceTo(closestPoint)) > 1500) {
+        if(parseInt(markerCoords.distanceTo(closestPoint)) > 500) {
           alienVar.setOpacity(0);
         } else {
           alienVar.setOpacity(1);
@@ -184,10 +207,10 @@
 
     let attackButton = document.getElementById('attack-button');
     attackButton.onclick = function() {
-      markerAttack(map.project(marker.getLatLng(),map.getMaxZoom()),markerStats,map.project(alien1.getLatLng(),map.getMaxZoom()),alien1Stats);
+      markerAttack(map.project(marker.getLatLng(),map.getMaxZoom()),markerStats,[map.project(alien1.getLatLng(),map.getMaxZoom()),map.project(alien2.getLatLng(),map.getMaxZoom()),map.project(alien3.getLatLng(),map.getMaxZoom())],[alien1Stats,alien2Stats,alien3Stats]);
       alienMove(marker,[alien1,alien2,alien3],map);
       readoutUpdate(marker,markerStats);
-      checkGameCondition(markerStats,[alien1Stats,alien2Stats,alien3Stats]);
+      checkGameCondition(markerStats,[alien1Stats,alien2Stats,alien3Stats],[alien1,alien2,alien3]);
     };
 
     let nButton = document.getElementById('n-compass-button');
@@ -195,7 +218,7 @@
       moveMarker(marker,map,0,-100);
       alienMove(marker,[alien1,alien2,alien3],map);
       readoutUpdate(marker,markerStats);
-      checkGameCondition(markerStats,[alien1Stats,alien2Stats,alien3Stats]);
+      checkGameCondition(markerStats,[alien1Stats,alien2Stats,alien3Stats],[alien1,alien2,alien3]);
     };
 
     let neButton = document.getElementById('ne-compass-button');
@@ -203,7 +226,7 @@
       moveMarker(marker,map,75,-75);
       alienMove(marker,[alien1,alien2,alien3],map);
       readoutUpdate(marker,markerStats);
-      checkGameCondition(markerStats,[alien1Stats,alien2Stats,alien3Stats]);
+      checkGameCondition(markerStats,[alien1Stats,alien2Stats,alien3Stats],[alien1,alien2,alien3]);
     };
 
     let eButton = document.getElementById('e-compass-button');
@@ -211,7 +234,7 @@
       moveMarker(marker,map,100,0);
       alienMove(marker,[alien1,alien2,alien3],map);
       readoutUpdate(marker,markerStats);
-      checkGameCondition(markerStats,[alien1Stats,alien2Stats,alien3Stats]);
+      checkGameCondition(markerStats,[alien1Stats,alien2Stats,alien3Stats],[alien1,alien2,alien3]);
     };
 
     let seButton = document.getElementById('se-compass-button');
@@ -219,7 +242,7 @@
       moveMarker(marker,map,75,75);
       alienMove(marker,[alien1,alien2,alien3],map);
       readoutUpdate(marker,markerStats);
-      checkGameCondition(markerStats,[alien1Stats,alien2Stats,alien3Stats]);
+      checkGameCondition(markerStats,[alien1Stats,alien2Stats,alien3Stats],[alien1,alien2,alien3]);
     };
 
     let sButton = document.getElementById('s-compass-button');
@@ -227,7 +250,7 @@
       moveMarker(marker,map,0,100);
       alienMove(marker,[alien1,alien2,alien3],map);
       readoutUpdate(marker,markerStats);
-      checkGameCondition(markerStats,[alien1Stats,alien2Stats,alien3Stats]);
+      checkGameCondition(markerStats,[alien1Stats,alien2Stats,alien3Stats],[alien1,alien2,alien3]);
     };
 
     let swButton = document.getElementById('sw-compass-button');
@@ -235,7 +258,7 @@
       moveMarker(marker,map,-75,75);
       alienMove(marker,[alien1,alien2,alien3],map);
       readoutUpdate(marker,markerStats);
-      checkGameCondition(markerStats,[alien1Stats,alien2Stats,alien3Stats]);
+      checkGameCondition(markerStats,[alien1Stats,alien2Stats,alien3Stats],[alien1,alien2,alien3]);
     };
 
     let wButton = document.getElementById('w-compass-button');
@@ -243,7 +266,7 @@
       moveMarker(marker,map,-100,0);
       alienMove(marker,[alien1,alien2,alien3],map);
       readoutUpdate(marker,markerStats);
-      checkGameCondition(markerStats,[alien1Stats,alien2Stats,alien3Stats]);
+      checkGameCondition(markerStats,[alien1Stats,alien2Stats,alien3Stats],[alien1,alien2,alien3]);
     };
 
     let nwButton = document.getElementById('nw-compass-button');
@@ -251,7 +274,7 @@
       moveMarker(marker,map,-75,-75);
       alienMove(marker,[alien1,alien2,alien3],map);
       readoutUpdate(marker,markerStats);
-      checkGameCondition(markerStats,[alien1Stats,alien2Stats,alien3Stats]);
+      checkGameCondition(markerStats,[alien1Stats,alien2Stats,alien3Stats],[alien1,alien2,alien3]);
     };
 
     </script>
