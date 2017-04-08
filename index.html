@@ -14,6 +14,16 @@
 
     <div id="map"></div>
 
+    <div id="game-lost-container" onclick="reloadPage()">
+      <span>Game Over</span><br>
+      <span>Click to try again</span>
+    </div>
+
+    <div id="game-won-container" onclick="reloadPage()">
+      <span>You Won!</span><br>
+      <span>Click to try again</span>
+    </div>
+
     <div id="control-panel-container">
 
       <div id="control-panel">
@@ -49,6 +59,10 @@
     </div>
 
     <script type="text/javascript">
+
+    let reloadPage = function() {
+      location.reload();
+    }
 
     //Variables
     let mapSW = [0,4096];
@@ -167,7 +181,7 @@
     };
 
     let checkGameCondition = function(markerStats,alienStatsArray,alienVarArray) {
-
+      console.log(alienHasAttacked);
       alienStatsArray.forEach(function(alienStats,idx) {
         if(alienStats.health < 1) {
           alienVarArray[idx].setOpacity(0);
@@ -202,6 +216,7 @@
         $("#nw-compass-button").prop('disabled',true);
         $("#attack-button").prop('disabled',true);
         $("#repair-button").prop('disabled',true);
+        $("#game-lost-container").css("display","block");
         return;
       }
       if(gameWon) {
@@ -216,6 +231,7 @@
         $("#nw-compass-button").prop('disabled',true);
         $("#attack-button").prop('disabled',true);
         $("#repair-button").prop('disabled',true);
+        $("#game-won-container").css("display","block");
         return;
       }
       if(alienHasAttacked) {
