@@ -1,9 +1,28 @@
+#map {
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:150px;
+  z-index:1;
+  background-color: #888888;
+}
+
 #button-container {
   position: relative;
   border: 1px solid green;
   height: 100px;
   width:150px;
   margin: 20px 0 0 20px;
+}
+
+#control-panel {
+  position: fixed;
+  bottom: 0;
+  height: 150px;
+  background-color: #444;
+  width:100%;
+  z-index: 5;
 }
 
 .compass-button {
