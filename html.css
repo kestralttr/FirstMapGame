@@ -92,3 +92,9 @@
   bottom: 50px;
   left: 40%;
 }
+
+#repair-button {
+  position: absolute;
+  bottom: 50px;
+  left: 60%;
+}
