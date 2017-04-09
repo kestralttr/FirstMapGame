@@ -135,7 +135,19 @@
       let latlngObj;
       latlngObj = mapVar.project(markerVar.getLatLng(),mapVar.getMaxZoom());
       latlngObj.x = (parseInt(latlngObj.x) + xDiff);
+      if(latlngObj.x < 0) {
+        latlngObj.x = 0;
+      }
+      if(latlngObj.x > 4000) {
+        latlngObj.x = 4000;
+      }
       latlngObj.y = (parseInt(latlngObj.y) + yDiff);
+      if(latlngObj.y < 0) {
+        latlngObj.y = 0;
+      }
+      if(latlngObj.y > 4000) {
+        latlngObj.y = 4000;
+      }
       markerVar.setLatLng(mapVar.unproject(latlngObj,mapVar.getMaxZoom()));
     };
 
@@ -278,9 +290,21 @@
             }
           }
         });
+        if(closestPoint.x < 0) {
+          closestPoint.x = 0;
+        }
+        if(closestPoint.x > 4000) {
+          closestPoint.x = 4000;
+        }
+        if(closestPoint.y < 0) {
+          closestPoint.y = 0;
+        }
+        if(closestPoint.y > 4000) {
+          closestPoint.y = 4000;
+        }
         alienVar.setLatLng(mapVar.unproject(closestPoint,mapVar.getMaxZoom()));
         if(parseInt(markerCoords.distanceTo(closestPoint)) > 500 && alienStatsArray[idx].health > 0) {
-          alienVar.setOpacity(0.1);
+          alienVar.setOpacity(0.4);
         } else {
           alienVar.setOpacity(1);
         }
