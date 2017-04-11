@@ -131,6 +131,18 @@
     let gameWon = false;
     let gameLost = false;
 
+    let markerMoveSFX = new Audio('SFX/markermove1.mp3');
+    markerMoveSFX.volume = 0.5;
+    let alienAttackSFX = new Audio('SFX/alienAttack1.mp3');
+    alienAttackSFX.volume = 0.4;
+    let markerAttackSFX = new Audio('SFX/markerAttack1.mp3');
+    markerAttackSFX.volume = 0.5;
+    let repairSFX = new Audio('SFX/repair1.mp3');
+    repairSFX.volume = 0.5;
+    let atmoTrack = new Audio('SFX/synthAtmo2.mp3');
+    atmoTrack.volume = 0.2;
+    atmoTrack.loop = false;
+
     let moveMarker = function(markerVar,mapVar,xDiff,yDiff) {
       let latlngObj;
       latlngObj = mapVar.project(markerVar.getLatLng(),mapVar.getMaxZoom());
@@ -148,15 +160,18 @@
       if(latlngObj.y > 4000) {
         latlngObj.y = 4000;
       }
+      markerMoveSFX.play();
+      markerMoveSFX.currentTime=0;
       markerVar.setLatLng(mapVar.unproject(latlngObj,mapVar.getMaxZoom()));
     };
 
     let alienAttack = function(markerVar,markerCoords,markerStats,alienVar,alienCoords,alienStats) {
-      alienHasAttacked = false;
       if(parseInt(markerCoords.distanceTo(alienCoords)) < 500 && alienStats.health > 0) {
         markerStats.health = markerStats.health - alienStats.dmg;
         markerStats.dmg = markerStats.dmg - Math.floor(Math.random()*10);
         alienHasAttacked = true;
+        alienAttackSFX.play();
+        alienAttackSFX.currentTime=0;
       }
     };
 
@@ -190,10 +205,12 @@
       }
       console.log(targetAlienStats);
       targetAlienStats.health -= markerStats.dmg;
+      markerAttackSFX.play();
+      markerAttackSFX.currentTime=0;
     };
 
     let checkGameCondition = function(markerStats,alienStatsArray,alienVarArray) {
-      console.log(alienHasAttacked);
+      console.log("alienHasAttacked: ",alienHasAttacked);
       alienStatsArray.forEach(function(alienStats,idx) {
         if(alienStats.health < 1) {
           alienVarArray[idx].setOpacity(0);
@@ -265,6 +282,7 @@
     }
 
     let alienMove = function(markerVar,alienVarArray,alienStatsArray,mapVar) {
+      alienHasAttacked = false;
       alienVarArray.forEach(function(alienVar,idx) {
         let markerCoords = mapVar.project(markerVar.getLatLng(),mapVar.getMaxZoom());
         let alienCoords = mapVar.project(alienVar.getLatLng(),mapVar.getMaxZoom());
@@ -313,6 +331,9 @@
     };
 
     let markerRepair = function(markerStats) {
+      if(markerStats.health >= 100) {
+        return;
+      }
       if(markerStats.health + 10 > 100) {
         markerStats = 100;
       } else {
@@ -323,6 +344,8 @@
       } else {
         markerStats.dmg += 3;
       }
+      repairSFX.play();
+      repairSFX.currentTime=0;
     };
 
     //UPDATE METHODS (methods that update game state)
