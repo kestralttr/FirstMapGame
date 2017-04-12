@@ -30,12 +30,12 @@
       </p>
     </div>
 
-    <div id="game-lost-container" onclick="reloadPage()">
+    <div id="game-lost-container" onclick="resetGame()">
       <span>Game Over</span><br>
       <span>Click to try again</span>
     </div>
 
-    <div id="game-won-container" onclick="reloadPage()">
+    <div id="game-won-container" onclick="resetGame()">
       <span>You Won!</span><br>
       <span>Click to try again</span>
     </div>
@@ -156,6 +156,47 @@
     let gameOver = false;
     let gameWon = false;
     let gameLost = false;
+
+    let resetGame = function() {
+
+      map.removeLayer(marker);
+      map.removeLayer(alien1);
+      map.removeLayer(alien2);
+      map.removeLayer(alien3);
+
+      $("#status-readout").html("Systems normal");
+      $("#n-compass-button").prop('disabled',false);
+      $("#ne-compass-button").prop('disabled',false);
+      $("#e-compass-button").prop('disabled',false);
+      $("#se-compass-button").prop('disabled',false);
+      $("#s-compass-button").prop('disabled',false);
+      $("#sw-compass-button").prop('disabled',false);
+      $("#w-compass-button").prop('disabled',false);
+      $("#nw-compass-button").prop('disabled',false);
+      $("#attack-button").prop('disabled',false);
+      $("#repair-button").prop('disabled',false);
+      $("#game-won-container").css("display","none");
+      $("#game-lost-container").css("display","none");
+
+      marker = L.marker(map.unproject([Math.floor(Math.random()*4000),Math.floor(Math.random()*4000)],map.getMaxZoom()),{icon:markerIcon}).addTo(map);
+      markerStats = {health: 100, dmg: 50};
+
+      alien1 = L.marker(map.unproject([Math.floor(Math.random()*4000),Math.floor(Math.random()*4000)],map.getMaxZoom()),{icon:alien1Icon}).addTo(map);
+      alien1Stats = {health: 50, dmg: 20};
+
+      alien2 = L.marker(map.unproject([Math.floor(Math.random()*4000),Math.floor(Math.random()*4000)],map.getMaxZoom()),{icon:alien1Icon}).addTo(map);
+      alien2Stats = {health: 50, dmg: 20};
+
+      alien3 = L.marker(map.unproject([Math.floor(Math.random()*4000),Math.floor(Math.random()*4000)],map.getMaxZoom()),{icon:alien1Icon}).addTo(map);
+      alien3Stats = {health: 50, dmg: 20};
+
+      alienStatsArray = [alien1Stats,alien2Stats,alien3Stats];
+      alienHasAttacked = false;
+
+      gameOver = false;
+      gameWon = false;
+      gameLost = false;
+    }
 
     let markerMoveSFX = new Audio('SFX/markermove1.mp3');
     markerMoveSFX.volume = 0.5;
