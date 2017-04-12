@@ -5,6 +5,7 @@
     <title>First Map Game</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" href="Scripts/LeafletJS/leaflet.css">
     <link rel="stylesheet" href="html.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -13,6 +14,21 @@
   <body style="margin:0 0 0 0;height:80%;">
 
     <div id="map"></div>
+
+    <div id="instructions-tab" onclick="expandInstructions()">&#9660 Instructions &#9660</div>
+    <div id="instructions-expanded" onclick="contractInstructions()">
+      <h2>
+        Martian Assault
+      </h2>
+      <p>
+        Destroy all the aliens before they destroy you!<br><br>
+        Aliens out of range will be semi-transparent.  But once they are fully opaque, fire away!<br><br>
+        Use the buttons to move around, repair your tank, and attack the closest alien within range.  Each button click will advance the game.<br><br>
+        Use the map control to zoom in and out as needed.<br><br>
+        Good luck!
+
+      </p>
+    </div>
 
     <div id="game-lost-container" onclick="reloadPage()">
       <span>Game Over</span><br>
@@ -62,6 +78,16 @@
 
     let reloadPage = function() {
       location.reload();
+    }
+
+    let expandInstructions = function() {
+      let instructionsExpanded = document.getElementById("instructions-expanded");
+      instructionsExpanded.style.display = "block";
+    }
+
+    let contractInstructions = function() {
+      let instructionsExpanded = document.getElementById("instructions-expanded");
+      instructionsExpanded.style.display = "none";
     }
 
     //Variables
