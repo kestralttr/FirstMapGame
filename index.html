@@ -113,7 +113,14 @@
     //Place markers and allow for movement
 
     let markerIcon = L.icon({
-      iconUrl: 'Images/tank1W.png',
+      iconUrl: 'Images/tank1N.png',
+      iconSize: [30,30],
+      iconAnchor: [15,15],
+      popupAnchor:[1,-15]
+    });
+
+    let markerIconDestroyed = L.icon({
+      iconUrl: 'Images/tank1N_destroyed.png',
       iconSize: [30,30],
       iconAnchor: [15,15],
       popupAnchor:[1,-15]
@@ -142,12 +149,15 @@
     let markerStats = {health: 100, dmg: 50};
 
     let alien1 = L.marker(map.unproject([Math.floor(Math.random()*4000),Math.floor(Math.random()*4000)],map.getMaxZoom()),{icon:alien1Icon}).addTo(map);
+    alien1.setOpacity(0.4);
     let alien1Stats = {health: 50, dmg: 20};
 
     let alien2 = L.marker(map.unproject([Math.floor(Math.random()*4000),Math.floor(Math.random()*4000)],map.getMaxZoom()),{icon:alien1Icon}).addTo(map);
+    alien2.setOpacity(0.4);
     let alien2Stats = {health: 50, dmg: 20};
 
     let alien3 = L.marker(map.unproject([Math.floor(Math.random()*4000),Math.floor(Math.random()*4000)],map.getMaxZoom()),{icon:alien1Icon}).addTo(map);
+    alien3.setOpacity(0.4);
     let alien3Stats = {health: 50, dmg: 20};
 
     let alienStatsArray = [alien1Stats,alien2Stats,alien3Stats];
@@ -177,17 +187,22 @@
       $("#repair-button").prop('disabled',false);
       $("#game-won-container").css("display","none");
       $("#game-lost-container").css("display","none");
+      $("#health-readout").html(100);
+      $("#damage-readout").html(50);
 
       marker = L.marker(map.unproject([Math.floor(Math.random()*4000),Math.floor(Math.random()*4000)],map.getMaxZoom()),{icon:markerIcon}).addTo(map);
       markerStats = {health: 100, dmg: 50};
 
       alien1 = L.marker(map.unproject([Math.floor(Math.random()*4000),Math.floor(Math.random()*4000)],map.getMaxZoom()),{icon:alien1Icon}).addTo(map);
+      alien1.setOpacity(0.4);
       alien1Stats = {health: 50, dmg: 20};
 
       alien2 = L.marker(map.unproject([Math.floor(Math.random()*4000),Math.floor(Math.random()*4000)],map.getMaxZoom()),{icon:alien1Icon}).addTo(map);
+      alien2.setOpacity(0.4);
       alien2Stats = {health: 50, dmg: 20};
 
       alien3 = L.marker(map.unproject([Math.floor(Math.random()*4000),Math.floor(Math.random()*4000)],map.getMaxZoom()),{icon:alien1Icon}).addTo(map);
+      alien3.setOpacity(0.4);
       alien3Stats = {health: 50, dmg: 20};
 
       alienStatsArray = [alien1Stats,alien2Stats,alien3Stats];
@@ -196,6 +211,7 @@
       gameOver = false;
       gameWon = false;
       gameLost = false;
+
     }
 
     let markerMoveSFX = new Audio('SFX/markermove1.mp3');
@@ -235,6 +251,9 @@
     let alienAttack = function(markerVar,markerCoords,markerStats,alienVar,alienCoords,alienStats) {
       if(parseInt(markerCoords.distanceTo(alienCoords)) < 500 && alienStats.health > 0) {
         markerStats.health = markerStats.health - alienStats.dmg;
+        if(markerStats.health < 0) {
+          markerStats.health = 0;
+        }
         markerStats.dmg = markerStats.dmg - Math.floor(Math.random()*10);
         alienHasAttacked = true;
         alienAttackSFX.play();
@@ -278,6 +297,7 @@
 
     let checkGameCondition = function(markerStats,alienStatsArray,alienVarArray) {
       console.log("alienHasAttacked: ",alienHasAttacked);
+      console.log(markerStats);
       alienStatsArray.forEach(function(alienStats,idx) {
         if(alienStats.health < 1) {
           alienVarArray[idx].setOpacity(0);
@@ -301,6 +321,7 @@
       }
 
       if(gameLost) {
+        marker.setIcon(markerIconDestroyed);
         $("#status-readout").html("Mission failure");
         $("#n-compass-button").prop('disabled',true);
         $("#ne-compass-button").prop('disabled',true);
@@ -398,16 +419,13 @@
     };
 
     let markerRepair = function(markerStats) {
-      if(markerStats.health >= 100) {
-        return;
-      }
       if(markerStats.health + 10 > 100) {
         markerStats = 100;
       } else {
         markerStats.health += 10;
       }
       if(markerStats.dmg + 3 > 50) {
-        markerStats = 50;
+        markerStats.dmg = 50;
       } else {
         markerStats.dmg += 3;
       }
