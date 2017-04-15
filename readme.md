@@ -1,6 +1,6 @@
 # Martian Attack
 
-[Play here](https://kestralttr.github.io/FirstMapGame/)
+[Play here](https://kestralttr.github.io/MartianAttack/)
 
 After some experimentation with importing custom maps into LeafletJS, I was intrigued by the possibility of simulating a world other than Earth and allowing users to interact with it.
 
